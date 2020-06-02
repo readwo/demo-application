@@ -7,7 +7,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 
 @Data
 @AllArgsConstructor
-@Document(collection = "carF")
+//@Document(collection = "carF")
 public class Car {
 
     private String name;

@@ -3,30 +3,24 @@ package demo.mongo;
 
 import cn.hutool.json.JSONObject;
 import cn.hutool.json.JSONUtil;
-import com.mongodb.client.FindIterable;
-import com.mongodb.client.MongoCursor;
 import demo.mongo.vo.Car;
-import demo.mongo.vo.Landmark;
-import javafx.application.Application;
+
 import org.bson.Document;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.mongodb.core.MongoTemplate;
-import org.springframework.data.mongodb.core.geo.GeoJsonPoint;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.springframework.data.mongodb.core.query.Criteria.where;
-import static org.springframework.data.mongodb.core.query.Query.query;
 
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
-public class MongoTest {
+public class MongoInsertTest {
 
     @Autowired
     MongoTemplate mongoTemplate;
@@ -49,6 +43,8 @@ public class MongoTest {
      */
     @Test
     public void templateInsert() {
+
+
 
         //插入实体类
         //mongoTemplate.insert(new Car("QQ", "黑色"));
@@ -87,7 +83,7 @@ public class MongoTest {
 
     /**
      * 用MongoDBTemplate#insertAll 插入集合
-     *      集合的泛型必须要指定类型, 以泛型类型为集合名,即使实体类上标注了@Document映射
+     *      集合的泛型必须要指定实体类型, 以实体类名或映射的集合名, 为指定的集合名称,入mongo库中
      *      但document类型做泛型不合适
      *
      */
@@ -99,7 +95,8 @@ public class MongoTest {
         list.add(new Car("ee11","h11"));
         list.add(new Car("rrr11","h11"));
 
-        mongoTemplate.insertAll(list);
+       mongoTemplate.insertAll(list);
+
 
     }
 
@@ -120,30 +117,28 @@ public class MongoTest {
 
     }
 
+    /**
+     * 插入多条文档
+     * 需要以 org.bson.Document 文档类型插入
+     */
     @Test
     public void insertAllDB() {
 
-        JSONObject put = JSONUtil.createObj().put("zs", "zs").put("ls", "ls");
-//        mongoTemplate.getDb().getCollection("trip").insertOne(Document.parse(put.toString()));
+        List<Document> lists = new ArrayList<>();
+
 
         Document document = new Document();
         document.append("ww", "ww").append("zl", "zl");
-        mongoTemplate.getDb().getCollection("trip").insertOne(document);
+
+        lists.add(document);
+        Document document2 = new Document().append("ww","w2");
+        lists.add(document2);
+        mongoTemplate.getDb().getCollection("trip").insertMany(lists);
 
     }
 
 
-    @Test
-    public void test1(){
-        double longitude =114.65066d;
-        double latitude = 26.560176d;
-        GeoJsonPoint geoJsonPoint = new GeoJsonPoint(longitude, latitude);
-        List<Landmark> geometry = mongoTemplate.find(query(where("geometry").intersects(geoJsonPoint).and("provinceId").is("36")), Landmark.class);
 
-        for (Landmark landmark : geometry) {
-            System.out.println(landmark);
-        }
-    }
 
 
 }
