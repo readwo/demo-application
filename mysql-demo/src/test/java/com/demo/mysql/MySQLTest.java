@@ -15,6 +15,9 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.List;
 
+/**
+ * 转换电子围栏  v1
+ */
 @RunWith(SpringRunner.class)
 @SpringBootTest
 public class MySQLTest {

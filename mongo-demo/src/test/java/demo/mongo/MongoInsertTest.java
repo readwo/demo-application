@@ -3,6 +3,8 @@ package demo.mongo;
 
 import cn.hutool.json.JSONObject;
 import cn.hutool.json.JSONUtil;
+import com.mongodb.client.model.InsertOneModel;
+import com.mongodb.client.model.WriteModel;
 import demo.mongo.vo.Car;
 
 import org.bson.Document;
@@ -10,6 +12,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.mongodb.core.BulkOperations;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.test.context.junit4.SpringRunner;
 
@@ -45,6 +48,9 @@ public class MongoInsertTest {
     public void templateInsert() {
 
 
+        String str = "{\"altitude\":0,\"latitude\":0.0,\"vec1\":0,\"updateTime\":\"2020-06-17 19:55:49\",\"source\":\"JT808\",\"platformId\":\"GEOA\",\"deviceId\":\"015875123812\",\"sendTime\":\"19991130000000\",\"intensity\":17,\"satelliteNum\":0,\"alarm\":0,\"state\":1,\"direction\":0,\"longitude\":0.0}";
+
+        mongoTemplate.insert(new JSONObject(str),"bike");
 
         //插入实体类
         //mongoTemplate.insert(new Car("QQ", "黑色"));
@@ -62,21 +68,21 @@ public class MongoInsertTest {
 //        mongoTemplate.insert(list,"car");
 
 
-        List<Document> docList = new ArrayList<>();
-        docList.add(Document.parse("{\"hello\": \"world\",\"xm\": \"zs\"}"));
-        docList.add(Document.parse("{\"hello1\": \"world1\",\"xm1\": \"zs1\"}"));
-        docList.add(Document.parse("{\"hello2\": \"world2\",\"xm2\": \"zs2\"}"));
-
-        JSONObject jsonObject = new JSONObject("{\"hello\": \"world\",\"xm\": \"zs\"}");
-        JSONObject jsonObject1 = new JSONObject("{\"hello1\": \"world1\",\"xm1\": \"zs1\"}");
-        JSONObject jsonObject2 = new JSONObject("{\"hello1\": \"world2\",\"xm1\": \"zs2\"}");
-        List<JSONObject> list = new ArrayList<>();
-
-        list.add(jsonObject);
-        list.add(jsonObject1);
-        list.add(jsonObject2);
-
-        mongoTemplate.insert(list, "car22");
+//        List<Document> docList = new ArrayList<>();
+//        docList.add(Document.parse("{\"hello\": \"world\",\"xm\": \"zs\"}"));
+//        docList.add(Document.parse("{\"hello1\": \"world1\",\"xm1\": \"zs1\"}"));
+//        docList.add(Document.parse("{\"hello2\": \"world2\",\"xm2\": \"zs2\"}"));
+//
+//        JSONObject jsonObject = new JSONObject("{\"hello\": \"world\",\"xm\": \"zs\"}");
+//        JSONObject jsonObject1 = new JSONObject("{\"hello1\": \"world1\",\"xm1\": \"zs1\"}");
+//        JSONObject jsonObject2 = new JSONObject("{\"hello1\": \"world2\",\"xm1\": \"zs2\"}");
+//        List<JSONObject> list = new ArrayList<>();
+//
+//        list.add(jsonObject);
+//        list.add(jsonObject1);
+//        list.add(jsonObject2);
+//
+//        mongoTemplate.insert(list, "car22");
 
     }
 
@@ -137,6 +143,28 @@ public class MongoInsertTest {
 
     }
 
+
+    @Test
+    public void bulkWrite(){
+        List<WriteModel<Document>> lists = new ArrayList<>();
+
+
+        Document document = new Document();
+        document.append("ww", "ww").append("zl", "zl");
+
+        //lists.add(document);
+        Document document2 = new Document().append("ww","w2");
+        //lists.add(document2);
+
+        InsertOneModel<Document> insertOneModel = new InsertOneModel<>(document);
+        InsertOneModel<Document> insertOneModel2 = new InsertOneModel<>(document2);
+
+
+        lists.add(insertOneModel);
+        lists.add(insertOneModel2);
+
+        mongoTemplate.getDb().getCollection("trip").bulkWrite(lists);
+    }
 
 
 

@@ -12,6 +12,8 @@
         <module>rest-demo</module>
         <module>flink-demo</module>
         <module>rabbitmq-demo</module>
+        <module>es-demo</module>
+        <module>websocket-demo</module>
     </modules>
     <parent>
         <groupId>org.springframework.boot</groupId>

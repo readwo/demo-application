@@ -1,6 +1,5 @@
 package com.demo.mysql;
 
-import cn.hutool.core.util.StrUtil;
 import com.demo.mysql.util.GpsCoordinateUtils;
 import com.demo.mysql.vo.*;
 import org.junit.Test;
@@ -15,6 +14,10 @@ import org.springframework.test.context.junit4.SpringRunner;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.List;
+
+/**
+ * 转换电子围栏  v2
+ */
 
 @RunWith(SpringRunner.class)
 @SpringBootTest

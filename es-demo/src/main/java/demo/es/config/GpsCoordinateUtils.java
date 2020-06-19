@@ -1,5 +1,7 @@
-package demo.mongo.utils;
+package demo.es.config;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -26,7 +28,18 @@ public class GpsCoordinateUtils {
         double retLon = longitude + dev.getLongitude();
         return new double[]{retLat, retLon};
     }
-
+    public static double calWGS84toGCJ02Lat(double latitude, double longitude) {
+        Point dev = calDev(latitude, longitude);
+        double retLat = latitude + dev.getLatitude();
+        double retLon = longitude + dev.getLongitude();
+        return retLat;
+    }
+    public static double calWGS84toGCJ02Log(double latitude, double longitude) {
+        Point dev = calDev(latitude, longitude);
+        double retLat = latitude + dev.getLatitude();
+        double retLon = longitude + dev.getLongitude();
+        return retLon;
+    }
     /**
      * 地球坐标系 WGS-84 to 百度坐标系 BD-09
      *
@@ -58,57 +71,53 @@ public class GpsCoordinateUtils {
         return new double[]{ retLat,retLon};
     }
 
-
     public static double[] calGc284( double longitude,double latitude){
         return calGCJ02toWGS84(latitude,longitude);
 
     }
 
     public static double[] calWGS84toGC(  double longitude,double latitude){
-        double[] doubles = calWGS84toGCJ02(latitude, longitude);
-        double[] new_doubles  = new double[2];
-        new_doubles[0] = doubles[1];
-        new_doubles[1] = doubles[0];
-        return new_doubles;
+        double[] res = calWGS84toGCJ02(latitude,longitude);
+        double[] ret = new double[2];
+        ret[0] = Double.parseDouble(new BigDecimal(res[1]).setScale(6, RoundingMode.DOWN).toString());
+        ret[1] = Double.parseDouble(new BigDecimal(res[0]).setScale(6, RoundingMode.DOWN).toString());
+       return ret;
     }
 
-    //115.823937,28.919562         115.818920,28.922651
-    //115.826319,28.915054          115.821309,28.918151
-    //115.829774,28.909748           115.824773,28.912856
+    //102.461722,24.936218          102.460204,24.939067
+    //102.465917,24.939429          102.464410,24.942288
+    //
+    //102.461651,24.940004
+    //102.463426,24.941433
+
+
+    //102.694111,25.145634      102.692708,25.148627
+    //102.694245,25.145842      102.692841,25.148834
+    //102.694524,25.146177      102.693120,25.149169
+
+
+    //102.693204,25.144687          102.691803,25.147681
+    //102.695071,25.147037          102.693665,25.150028
+    //102.695409,25.147712          102.694003,25.150702
+    //102.695747,25.148256          102.694340,25.151246
+
+
+    //102.560649,24.957492
+    //102.563217,24.955532
+    //102.566763,24.957463
+    //102.560874,24.961053
+
+    //102.518751,24.937108
+    //102.517949,24.937640
+    //102.517422,24.937751
     /*public static void main(String[] args) {
+        System.out.println("a1");
+        double[] res = calGc284(102.518672,24.934636);
 
-        String str = "[[\n" +
-                "                    118.326868,\n" +
-                "                    28.804877\n" +
-                "                ],\n" +
-                "                [\n" +
-                "                    118.342206,\n" +
-                "                    28.795453\n" +
-                "                ],\n" +
-                "                [\n" +
-                "                    118.347305,\n" +
-                "                    28.801307\n" +
-                "                ],\n" +
-                "                [\n" +
-                "                    118.332566,\n" +
-                "                    28.809826\n" +
-                "                ]]";
-        JSONArray jsonArray = new JSONArray(str);
-        for (Object o : jsonArray) {
-            JSONArray array = new JSONArray(o);
-            double[] res = calWGS84toGC(array.getDouble(0),array.getDouble(1));
-            System.out.println("["+new BigDecimal(res[1]).setScale(6, RoundingMode.DOWN)+","+new BigDecimal(res[0]).setScale(6, RoundingMode.DOWN) +"]");
-            System.out.println(",");
-        }
-
-        //117.803787,27.969279
-        //117.803400,27.979020
-        //117.804130,27.983684
-        //117.806926,27.987442
-        //double[] res = calGc284(117.812027,27.984116);
-        //System.out.println("["+new BigDecimal(res[1]).setScale(6, RoundingMode.DOWN)+","+new BigDecimal(res[0]).setScale(6, RoundingMode.DOWN) +"]");
-
-
+        //截断保留6位小数不四舍五入
+        System.out.println(res[0]+","+res[1]);
+        System.out.println(new BigDecimal(res[1]).setScale(6, RoundingMode.DOWN)+","+new BigDecimal(res[0]).setScale(6, RoundingMode.DOWN));
+        System.out.println("a2");
     }*/
 
     /**

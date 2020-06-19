@@ -67,12 +67,7 @@ public class T_TOLL_PLAZA {
 
     private int isAbnormal;
 
-    public static void main(String[] args) {
-        String lat = "25.285726";
-        String lng = "113.021616";
-        double[] doubles = GpsCoordinateUtils.calGCJ02toWGS84(Double.parseDouble(lat),Double.parseDouble(lng) );
-        System.out.println(new BigDecimal(doubles[0]).setScale(6, RoundingMode.DOWN)+","+doubles[1]);
-    }
+
 
 
 }
